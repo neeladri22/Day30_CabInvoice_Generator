@@ -37,17 +37,15 @@ namespace CabInvoiceGeneratorTesting
             Assert.AreEqual(CabInvoiceGeneratorException.ExceptionType.INVALID_DISTANCE, invalidDistanceException.exceptionType);
         }
 
-        // TC2.1 - Given multiple rides should return aggregate fare
+        // TC2.1, 3.1 - Given multiple rides should return invoice summary
         [TestMethod]
         [TestCategory("Multiple Rides")]
         public void GivenMultipleRidesReturnAggregateFare()
         {
-            //Arrange
-            double actual, expected = 320;
             Ride[] cabRides = { new Ride(10, 15), new Ride(10, 15) };
-            //Act
-            actual = generateNormalFare.CalculateAgreegateFare(cabRides);
-            //Assert
+            InvoiceSummary expected = new InvoiceSummary(cabRides.Length, 320);
+            var actual = generateNormalFare.CalculateAgreegateFare(cabRides);
+
             Assert.AreEqual(actual, expected);
         }
 
@@ -61,4 +59,5 @@ namespace CabInvoiceGeneratorTesting
             Assert.AreEqual(CabInvoiceGeneratorException.ExceptionType.NULL_RIDES, nullRidesException.exceptionType);
         }
     }
+
 }
