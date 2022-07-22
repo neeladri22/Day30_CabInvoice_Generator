@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CabInvoiceGeneratorPrograms.CabInvoiceGeneratorProgram;
-
 namespace CabInvoiceGeneratorPrograms
 {
     public class CabInvoiceGenerator
@@ -42,5 +40,18 @@ namespace CabInvoiceGeneratorPrograms
                 throw ex;
             }
         }
+
+        // UC2 - Method to calculate agreegate fare for multiple rides
+        public double CalculateAgreegateFare(Ride[] rides)
+        {
+            double totalFare = 0;
+            if (rides.Length == 0)
+                throw new CabInvoiceGeneratorException(CabInvoiceGeneratorException.ExceptionType.NULL_RIDES, "No Rides Found");
+            foreach (var ride in rides)
+                totalFare += CalculateFare(ride.time, ride.distance);
+            double agreegateFare = Math.Max(totalFare, MINIMUM_FARE);
+            return agreegateFare;
+        }
     }
+
 }

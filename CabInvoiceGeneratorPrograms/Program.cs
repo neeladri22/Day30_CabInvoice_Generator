@@ -10,6 +10,9 @@ namespace CabInvoiceGeneratorPrograms
 
             CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator(RideType.NORMAL);
             Console.WriteLine(cabInvoiceGenerator.CalculateFare(10, 15));
+
+            Ride[] multiRides = { new Ride(10, 15), new Ride(10, 15) };
+            Console.WriteLine(cabInvoiceGenerator.CalculateAgreegateFare(multiRides));
             Console.ReadLine();
         }
     }
