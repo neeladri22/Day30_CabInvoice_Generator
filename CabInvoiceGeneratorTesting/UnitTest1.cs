@@ -8,23 +8,26 @@ namespace CabInvoiceGeneratorTesting
     [TestClass]
     public class CabInvoiceGeneratorTestCases
     {
-        public CabInvoiceGenerator generateNormalFare;
+        public CabInvoiceGenerator generateNormalFare, generatePremiumFare;
 
         [TestInitialize]
         public void SetUp()
         {
             generateNormalFare = new CabInvoiceGenerator(RideType.NORMAL);
+            generatePremiumFare = new CabInvoiceGenerator(RideType.PREMIUM);
         }
 
-        // TC1.1 Positive Testcase
+        // TC1.1, 5.1 Caculate fare for normal and premium rides (Positive Testcase) 
         [TestMethod]
         [TestCategory("Calculate Fare")]
-        [DataRow(1, 1.0, 11)]
-        [DataRow(10, 15, 160)]
-        public void GivenDistanceAndTimeReturnTotalFare(int time, double distance, double expected)
+        [DataRow(1, 1.0, 11, 20)]
+        [DataRow(10, 15, 160, 245)]
+        public void GivenDistanceAndTimeReturnTotalFare(int time, double distance, double normal_Expected, double premium_Expected)
         {
-            double actual = generateNormalFare.CalculateFare(time, distance);
-            Assert.AreEqual(actual, expected);
+            double normal_Actual = generateNormalFare.CalculateFare(time, distance);
+            double premium_Actual = generatePremiumFare.CalculateFare(time, distance);
+            Assert.AreEqual(normal_Actual, normal_Expected);
+            Assert.AreEqual(premium_Actual, premium_Expected);
         }
 
         // TC 1.2 Given Invalid Time And Distance Return Custom Exception
@@ -44,10 +47,13 @@ namespace CabInvoiceGeneratorTesting
         public void GivenMultipleRidesReturnAggregateFare()
         {
             Ride[] cabRides = { new Ride(10, 15), new Ride(10, 15) };
-            InvoiceSummary expected = new InvoiceSummary(cabRides.Length, 320);
-            var actual = generateNormalFare.CalculateAgreegateFare(cabRides);
+            InvoiceSummary normal_Expected = new InvoiceSummary(cabRides.Length, 320);
+            var normal_Actual = generateNormalFare.CalculateAgreegateFare(cabRides);
+            Assert.AreEqual(normal_Actual, normal_Expected);
 
-            Assert.AreEqual(actual, expected);
+            InvoiceSummary premium_Expected = new InvoiceSummary(cabRides.Length, 490);
+            var premium_Actual = generatePremiumFare.CalculateAgreegateFare(cabRides);
+            Assert.AreEqual(premium_Actual, premium_Expected);
         }
 
         // TC2.2 - given no rides return custom exception
@@ -60,7 +66,7 @@ namespace CabInvoiceGeneratorTesting
             Assert.AreEqual(CabInvoiceGeneratorException.ExceptionType.NULL_RIDES, nullRidesException.exceptionType);
         }
 
-        // TC 4.1 - Given user Id should return invoice summary
+        // TC 4.1, 5.1 - Given user Id should return invoice summary
         [TestMethod]
         [TestCategory("Invoice Service")]
         [DataRow(1, 2, 320, 10, 15, 10, 15)]
